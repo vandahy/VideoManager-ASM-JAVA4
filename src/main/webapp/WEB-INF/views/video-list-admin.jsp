@@ -49,7 +49,7 @@
 
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" name="title" id="title" class="form-control" value="${form.title}">
+                            <input type="text" name="titAle" id="title" class="form-control" value="${form.title}">
                         </div>
 
                         <div class="mb-3">
@@ -120,7 +120,7 @@
                     <tr>
                         <td>${video.id}</td>
                         <td>${video.title}</td>
-                        <td>${video.links}</td>
+                        <td><a href="${video.links}" target="_blank">${video.links}</a></td>
                         <td><img src="${video.poster}" style="height: 50px;" alt="Poster"></td>
                         <td>${video.views}</td>
                         <td>${video.description}</td>

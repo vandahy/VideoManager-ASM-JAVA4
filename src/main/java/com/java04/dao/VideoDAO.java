@@ -9,5 +9,6 @@ public interface VideoDAO extends GenericDAO<Video, String> {
     List<Video> findTop10FavoriteVideos();
     List<Video> findVideosNotFavorited();
     List<Video> findAllByViewsDesc();
-
+    int count();
+    List<Video> findByPage(int page, int size);
 }

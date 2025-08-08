@@ -78,11 +78,20 @@ public class VideoDAOImpl implements VideoDAO {
         return em.createQuery("SELECT v FROM Video v ORDER BY v.views DESC", Video.class)
                 .getResultList();  // ❌ không có setMaxResults
     }
+    @Override
+    public int count() {
+        Long count = em.createQuery("SELECT COUNT(v) FROM Video v", Long.class)
+                .getSingleResult();
+        return count.intValue();
+    }
 
-
-
-
-
+    @Override
+    public List<Video> findByPage(int page, int size) {
+        return em.createQuery("SELECT v FROM Video v ORDER BY v.id DESC", Video.class)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
+                .getResultList();
+    }
 }
 
 

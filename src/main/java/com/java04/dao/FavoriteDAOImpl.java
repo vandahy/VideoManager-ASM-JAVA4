@@ -5,6 +5,7 @@ import com.java04.entity.Favorite;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import java.util.Date;
 import java.util.List;
 
 public class FavoriteDAOImpl implements FavoriteDAO{
@@ -65,5 +66,50 @@ public class FavoriteDAOImpl implements FavoriteDAO{
                         "SELECT f FROM Favorite f WHERE f.user.id = :uid", Favorite.class)
                 .setParameter("uid", userId)
                 .getResultList();
+    }
+
+    @Override
+    public boolean isLiked(String userId, String videoId) {
+        String jpql = "SELECT COUNT(f) FROM Favorite f WHERE f.user.id = :userId AND f.video.id = :videoId";
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("userId", userId)
+                .setParameter("videoId", videoId)
+                .getSingleResult();
+        return count > 0;
+    }
+
+    @Override
+    public void like(String userId, String videoId) {
+        em.getTransaction().begin();
+
+        Favorite favorite = new Favorite();
+        favorite.setUser(em.find(com.java04.entity.User.class, userId));
+        favorite.setVideo(em.find(com.java04.entity.Video.class, videoId));
+        favorite.setLikeDate(new Date());
+
+        em.persist(favorite);
+
+        em.getTransaction().commit();
+    }
+
+    @Override
+    public void delete(String userId, String videoId) {
+        em.getTransaction().begin();
+        try {
+            Favorite favorite = em.createQuery(
+                            "SELECT f FROM Favorite f WHERE f.user.id = :uid AND f.video.id = :vid", Favorite.class)
+                    .setParameter("uid", userId)
+                    .setParameter("vid", videoId)
+                    .getSingleResult();
+
+            if (favorite != null) {
+                em.remove(favorite);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            e.printStackTrace();
+        }
     }
 }

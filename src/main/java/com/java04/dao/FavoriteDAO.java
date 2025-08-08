@@ -8,4 +8,7 @@ import java.util.List;
 public interface FavoriteDAO extends GenericDAO<Favorite, Long> {
     List<VideoSearchInfo> searchVideosByKeyword(String keyword);
     List<Favorite> findByUserId(String userId);
+    boolean isLiked(String userId, String videoId);
+    void like(String userId, String videoId);
+    void delete(String userId, String videoId);
 }

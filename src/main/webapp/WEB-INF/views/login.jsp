@@ -9,6 +9,18 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+<c:if test="${not empty message}">
+    <script>
+        alert("${message}");
+    </script>
+    <c:remove var="message"/>
+</c:if>
+<c:if test="${not empty error}">
+    <script>
+        alert("${error}");
+    </script>
+    <c:remove var="error"/>
+</c:if>
 
 <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px;">
     <h3 class="text-center mb-4 text-primary">Đăng nhập</h3>
@@ -34,7 +46,7 @@
     </c:if>
 
     <div class="mt-3 text-center">
-        <span>Chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a></span>
+        <span>Chưa có tài khoản? <a href="logup">Đăng ký ngay</a></span>
     </div>
 </div>
 

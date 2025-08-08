@@ -63,4 +63,31 @@ public class UserDAOImpl implements UserDAO {
             return null;
         }
     }
+
+    public String generateNewUserId() {
+        String lastId = em.createQuery("SELECT u.id FROM User u ORDER BY u.id DESC", String.class)
+                .setMaxResults(1)
+                .getResultStream()
+                .findFirst()
+                .orElse("USER00");
+
+        // Đảm bảo viết hoa ID
+        lastId = lastId.toUpperCase();
+
+        // Kiểm tra nếu ID bắt đầu bằng "USER" và phía sau là số
+        if (lastId.startsWith("USER") && lastId.length() > 4) {
+            try {
+                int number = Integer.parseInt(lastId.substring(4)); // Lấy phần số
+                number++;
+                return String.format("USER%02d", number);
+            } catch (NumberFormatException e) {
+                // Nếu phần số không hợp lệ thì quay về USER01
+                return "USER01";
+            }
+        }
+
+        // Nếu định dạng sai hoàn toàn thì bắt đầu lại từ USER01
+        return "USER01";
+    }
+
 }

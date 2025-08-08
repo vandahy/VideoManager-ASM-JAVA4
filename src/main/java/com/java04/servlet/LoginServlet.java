@@ -41,12 +41,11 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("user-management");
             } else {
                 // ✅ User thường → redirect tới servlet /video
-                response.sendRedirect("video");
+                response.sendRedirect("home");
             }
 
 
         } else {
-            // ❌ Sai tài khoản hoặc mật khẩu
             request.setAttribute("message", "Tên đăng nhập hoặc mật khẩu không đúng!");
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
         }

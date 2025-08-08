@@ -5,6 +5,6 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
   <welcome-file-list>
-    <welcome-file>/WEB-INF/views/home.jsp</welcome-file>
+    <welcome-file>login</welcome-file>
   </welcome-file-list>
 </web-app>

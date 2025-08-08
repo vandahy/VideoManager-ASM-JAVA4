@@ -49,7 +49,7 @@
 
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
-                            <input type="text" name="titAle" id="title" class="form-control" value="${form.title}">
+                            <input type="text" name="title" id="title" class="form-control" value="${form.title}">
                         </div>
 
                         <div class="mb-3">
@@ -78,6 +78,13 @@
                                    id="active" ${form.active ? "checked" : ""}>
                             <label class="form-check-label" for="active">Active</label>
                         </div>
+
+                        <c:if test="${not empty error}">
+                            <div class="alert alert-danger">${error}</div>
+                        </c:if>
+                        <c:if test="${not empty message}">
+                            <div class="alert alert-success">${message}</div>
+                        </c:if>
 
                         <!--  Nút submit dùng formaction -->
                         <div class="mb-3">

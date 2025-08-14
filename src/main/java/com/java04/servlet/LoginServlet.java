@@ -2,16 +2,12 @@ package com.java04.servlet;
 
 import com.java04.dao.UserDAO;
 import com.java04.dao.UserDAOImpl;
-import com.java04.dao.VideoDAO;
-import com.java04.dao.VideoDAOImpl;
 import com.java04.entity.User;
-import com.java04.entity.Video;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {

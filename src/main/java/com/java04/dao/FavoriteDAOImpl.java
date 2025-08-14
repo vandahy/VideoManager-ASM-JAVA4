@@ -93,6 +93,20 @@ public class FavoriteDAOImpl implements FavoriteDAO{
     }
 
     @Override
+    public void unlike(String userId, String videoId) {
+        em.getTransaction().begin();
+
+        Favorite favorite = new Favorite();
+        favorite.setUser(em.find(com.java04.entity.User.class, userId));
+        favorite.setVideo(em.find(com.java04.entity.Video.class, videoId));
+        favorite.setLikeDate(new Date());
+
+        em.persist(favorite);
+
+        em.getTransaction().commit();
+    }
+
+    @Override
     public void delete(String userId, String videoId) {
         em.getTransaction().begin();
         try {

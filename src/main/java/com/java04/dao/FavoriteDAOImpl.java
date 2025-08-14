@@ -1,6 +1,8 @@
 package com.java04.dao;
 
 import com.java04.dto.VideoSearchInfo;
+import com.java04.dto.FavoriteReportDTO;
+import com.java04.dto.FavoriteUserDTO;
 import com.java04.entity.Favorite;
 
 import javax.persistence.EntityManager;
@@ -125,5 +127,23 @@ public class FavoriteDAOImpl implements FavoriteDAO{
             em.getTransaction().rollback();
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<FavoriteReportDTO> getFavoriteReport() {
+        String jpql = "SELECT new com.java04.dto.FavoriteReportDTO(" +
+                "f.video.title, COUNT(f), MAX(f.likeDate), MIN(f.likeDate)) " +
+                "FROM Favorite f GROUP BY f.video.title";
+        return em.createQuery(jpql, FavoriteReportDTO.class).getResultList();
+    }
+
+    @Override
+    public List<FavoriteUserDTO> getFavoriteUsersByVideoTitle(String title) {
+        String jpql = "SELECT new com.java04.dto.FavoriteUserDTO(" +
+                "f.video.title, f.user.id, f.user.fullname, f.user.email, f.likeDate) " +
+                "FROM Favorite f WHERE LOWER(f.video.title) LIKE :title ORDER BY f.likeDate DESC";
+        return em.createQuery(jpql, FavoriteUserDTO.class)
+                .setParameter("title", "%" + title.toLowerCase() + "%")
+                .getResultList();
     }
 }

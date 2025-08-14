@@ -11,15 +11,7 @@
     <class>com.java04.entity.Share</class>
 
     <properties>
-        <property name="javax.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-        <property name="javax.persistence.jdbc.user" value="sa"/>
-        <property name="javax.persistence.jdbc.password" value="123456"/>
-        <property name="javax.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=PolyOE_Ass1;encrypt=true;trustServerCertificate=true"/>
-
-        <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
-        <property name="hibernate.hbm2ddl.auto" value="update"/>
-        <property name="hibernate.show_sql" value="true"/>
-        <property name="hibernate.format_sql" value="true"/>
+<!--        thông tin của ai tự điền và không push file này lên vì mỗi người khác nhau-->
     </properties>
 </persistence-unit>
 </persistence>

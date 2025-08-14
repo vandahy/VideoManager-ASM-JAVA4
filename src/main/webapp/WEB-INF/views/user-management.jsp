@@ -29,7 +29,10 @@
                 <a class="nav-link text-dark" href="user-management">Quản lý người dùng</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="video-list-admin">Quản lý video</a>
+                <a class="nav-link text-dark" href="admin/video">Quản lý video</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="admin/report">Thống kê</a>
             </li>
         </ul>
         <span class="navbar-text text-dark">

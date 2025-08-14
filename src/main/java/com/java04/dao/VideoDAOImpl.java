@@ -43,11 +43,15 @@ public class VideoDAOImpl implements VideoDAO {
     @Override
     public void deleteById(String id) {
         em.getTransaction().begin();
+        em.createQuery("DELETE FROM Favorite f WHERE f.video.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
         Video video = em.find(Video.class, id);
         if (video != null) {
             em.remove(video);
         }
         em.getTransaction().commit();
+
     }
 
     @Override

@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
 
             if (user.getAdmin()) {
                 // ✅ Admin → forward đến đúng vị trí file thật sự
-                request.getRequestDispatcher("/user-management").forward(request, response);
+                response.sendRedirect("user-management");
             } else {
                 // ✅ User thường → redirect tới servlet /video
                 response.sendRedirect("home");

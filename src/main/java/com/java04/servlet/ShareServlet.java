@@ -62,6 +62,3 @@ public class ShareServlet extends HttpServlet {
         resp.sendRedirect("home");
     }
 }
-
-
-

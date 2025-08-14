@@ -4,6 +4,7 @@ import com.java04.dao.VideoDAO;
 import com.java04.dao.VideoDAOImpl;
 import com.java04.dao.ShareDAO;
 import com.java04.dao.ShareDAOImpl;
+import com.java04.entity.User;
 import com.java04.entity.Video;
 import com.java04.entity.Share;
 import com.java04.entity.User;
@@ -14,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 
@@ -26,6 +28,13 @@ public class ShareServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         String email = req.getParameter("email");
         String videoId = req.getParameter("videoId");

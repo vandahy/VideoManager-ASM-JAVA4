@@ -12,6 +12,7 @@ public interface FavoriteDAO extends GenericDAO<Favorite, Long> {
     List<Favorite> findByUserId(String userId);
     boolean isLiked(String userId, String videoId);
     void like(String userId, String videoId);
+    void unlike(String userId, String videoId);
     void delete(String userId, String videoId);
     List<FavoriteReportDTO> getFavoriteReport();
     List<FavoriteUserDTO> getFavoriteUsersByVideoTitle(String title);

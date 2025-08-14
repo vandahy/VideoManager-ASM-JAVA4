@@ -24,7 +24,7 @@ public class FavoriteServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-            response.sendRedirect("login"); // Chưa đăng nhập
+            response.sendRedirect("login");
             return;
         }
 

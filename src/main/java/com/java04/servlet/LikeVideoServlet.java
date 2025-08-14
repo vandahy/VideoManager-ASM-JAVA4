@@ -25,7 +25,7 @@ public class LikeVideoServlet extends HttpServlet {
 
         // Nếu chưa login → chuyển hướng tới trang đăng nhập
         if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/account/login");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 

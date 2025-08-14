@@ -31,6 +31,9 @@
             <li class="nav-item">
                 <a class="nav-link text-dark" href="admin/video">Quản lý video</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="admin/report">Thống kê</a>
+            </li>
         </ul>
         <span class="navbar-text text-dark">
             Xin chào, ${sessionScope.user.fullname} |

@@ -2,10 +2,13 @@ package com.java04.servlet;
 
 import com.java04.dao.VideoDAO;
 import com.java04.dao.VideoDAOImpl;
+import com.java04.dao.ShareDAO;
+import com.java04.dao.ShareDAOImpl;
 import com.java04.entity.User;
 import com.java04.entity.Video;
+import com.java04.entity.Share;
+import com.java04.entity.User;
 import com.java04.utils.EmailUtils;
-import jakarta.mail.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,11 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 
 @WebServlet("/share")
 public class ShareServlet extends HttpServlet {
 
     private final VideoDAO videoDAO = new VideoDAOImpl(); // Khai báo DAO
+    private final ShareDAO shareDAO = new ShareDAOImpl();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -39,6 +44,17 @@ public class ShareServlet extends HttpServlet {
             String link = video.getLinks(); // Link gốc YouTube
 
             EmailUtils.sendEmail(email, "Your friend shared a video", "Watch it here: " + link);
+
+            // Lưu lịch sử chia sẻ để phục vụ thống kê
+            User currentUser = (User) req.getSession().getAttribute("user");
+            if (currentUser != null && video != null) {
+                Share s = new Share();
+                s.setUser(currentUser);
+                s.setVideo(video);
+                s.setEmails(email);
+                s.setShareDate(new Date());
+                shareDAO.create(s);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

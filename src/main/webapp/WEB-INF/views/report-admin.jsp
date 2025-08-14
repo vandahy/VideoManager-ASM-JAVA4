@@ -7,7 +7,9 @@
     <title>Thống kê</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .table-wrap { overflow-x: auto; }
+        .table-wrap {
+            overflow-x: auto;
+        }
     </style>
     <script>
         // Router: giống trang video-list-admin
@@ -17,7 +19,9 @@
 
                 function loadPage(url, pushState) {
                     fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}})
-                        .then(function (res) { return res.text(); })
+                        .then(function (res) {
+                            return res.text();
+                        })
                         .then(function (html) {
                             var parser = new DOMParser();
                             var doc = parser.parseFromString(html, 'text/html');
@@ -33,13 +37,17 @@
                                 window.location.href = url;
                             }
                         })
-                        .catch(function () { window.location.href = url; });
+                        .catch(function () {
+                            window.location.href = url;
+                        });
                 }
 
                 function handleNavbarClick(event) {
                     var anchor = event.currentTarget;
                     var url = anchor.getAttribute('href');
-                    if (!url || url.startsWith('http')) { return; }
+                    if (!url || url.startsWith('http')) {
+                        return;
+                    }
                     event.preventDefault();
                     if (url.indexOf('/logout') !== -1) {
                         window.location.href = url;
@@ -66,7 +74,10 @@
             event.preventDefault();
             var input = document.getElementById('favUsersSearch');
             var title = (input && input.value || '').trim();
-            if (!title) { alert('Vui lòng nhập video title'); return; }
+            if (!title) {
+                alert('Vui lòng nhập video title');
+                return;
+            }
             document.getElementById('favUsersForm').submit();
         }
 
@@ -74,7 +85,10 @@
             event.preventDefault();
             var input = document.getElementById('sharedSearch');
             var title = (input && input.value || '').trim();
-            if (!title) { alert('Vui lòng nhập video title'); return; }
+            if (!title) {
+                alert('Vui lòng nhập video title');
+                return;
+            }
             document.getElementById('sharedForm').submit();
         }
     </script>
@@ -82,7 +96,9 @@
         // Hiển thị alert nếu server set thuộc tính requestScope.alertMessage
         document.addEventListener('DOMContentLoaded', function () {
             var msg = '${requestScope.alertMessage}';
-            if (msg && msg !== 'null' && msg !== '') { alert(msg); }
+            if (msg && msg !== 'null' && msg !== '') {
+                alert(msg);
+            }
         });
     </script>
     <script>
@@ -91,7 +107,7 @@
             var activeTab = '${requestScope.activeReportTab}';
             if (activeTab) {
                 var triggerEl = document.querySelector('button[data-bs-target="#' + activeTab + '"]');
-                if (triggerEl) {
+                if (triggerEl && window.bootstrap && bootstrap.Tab) {
                     var tab = new bootstrap.Tab(triggerEl);
                     tab.show();
                 }
@@ -106,12 +122,20 @@
         <a class="navbar-brand fw-bold text-dark" href="#">👑 Admin Dashboard</a>
         <ul class="navbar-nav me-auto">
             <li class="nav-item">
-                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/user-management">Quản lý người dùng</a>
+                <!-- Link tới trang quản lý người dùng, dùng contextPath để không phụ thuộc cấu hình app -->
+                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/home">Trang chủ</a>
             </li>
             <li class="nav-item">
+                <!-- Link tới trang quản lý người dùng, dùng contextPath để không phụ thuộc cấu hình app -->
+                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/user-management">Quản lý người
+                    dùng</a>
+            </li>
+            <li class="nav-item">
+                <!-- Link tới trang quản lý video -->
                 <a class="nav-link text-dark" href="${pageContext.request.contextPath}/admin/video">Quản lý video</a>
             </li>
             <li class="nav-item">
+                <!-- Link tới trang thống kê -->
                 <a class="nav-link text-dark" href="${pageContext.request.contextPath}/admin/report">Thống kê</a>
             </li>
         </ul>
@@ -128,17 +152,20 @@
 
     <ul class="nav nav-tabs" id="reportTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites" type="button" role="tab">
+            <button class="nav-link active" id="favorites-tab" data-bs-toggle="tab" data-bs-target="#favorites"
+                    type="button" role="tab">
                 Favorites
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="favusers-tab" data-bs-toggle="tab" data-bs-target="#favusers" type="button" role="tab">
+            <button class="nav-link" id="favusers-tab" data-bs-toggle="tab" data-bs-target="#favusers" type="button"
+                    role="tab">
                 Favorite Users
             </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="shared-tab" data-bs-toggle="tab" data-bs-target="#shared" type="button" role="tab">
+            <button class="nav-link" id="shared-tab" data-bs-toggle="tab" data-bs-target="#shared" type="button"
+                    role="tab">
                 Shared Friends
             </button>
         </li>
@@ -173,9 +200,11 @@
 
         <!-- Tab 2: Favorite Users -->
         <div class="tab-pane fade" id="favusers" role="tabpanel">
-            <form id="favUsersForm" class="row g-2 align-items-center" method="get" action="${pageContext.request.contextPath}/admin/report/favorite-users">
+            <form id="favUsersForm" class="row g-2 align-items-center" method="get"
+                  action="${pageContext.request.contextPath}/admin/report/favorite-users">
                 <div class="col-sm-6">
-                    <input type="text" id="favUsersSearch" name="title" class="form-control" placeholder="Nhập video title..." value="${param.title}">
+                    <input type="text" id="favUsersSearch" name="title" class="form-control"
+                           placeholder="Nhập video title..." value="${param.title}">
                 </div>
                 <div class="col-sm-auto">
                     <button class="btn btn-primary" onclick="submitFavoriteUsersSearch(event)">Tìm kiếm</button>
@@ -209,9 +238,11 @@
 
         <!-- Tab 3: Shared Friends -->
         <div class="tab-pane fade" id="shared" role="tabpanel">
-            <form id="sharedForm" class="row g-2 align-items-center" method="get" action="${pageContext.request.contextPath}/admin/report/shared-friends">
+            <form id="sharedForm" class="row g-2 align-items-center" method="get"
+                  action="${pageContext.request.contextPath}/admin/report/shared-friends">
                 <div class="col-sm-6">
-                    <input type="text" id="sharedSearch" name="title" class="form-control" placeholder="Nhập video title..." value="${param.title}">
+                    <input type="text" id="sharedSearch" name="title" class="form-control"
+                           placeholder="Nhập video title..." value="${param.title}">
                 </div>
                 <div class="col-sm-auto">
                     <button class="btn btn-primary" onclick="submitSharedFriendsSearch(event)">Tìm kiếm</button>

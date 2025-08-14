@@ -44,19 +44,16 @@ public class HomeServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
-        if (user == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
+        if (user != null) {
+            List<Favorite> favorites = favoriteDAO.findByUserId(user.getId());
+            request.setAttribute("favorites", favorites);
         }
-
-        List<Favorite> favorites = favoriteDAO.findByUserId(user.getId());
-        request.setAttribute("favorites", favorites);
 
         request.setAttribute("videos", videos);
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
 
-        request.getRequestDispatcher("WEB-INF/views/home.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
     }
 }
 

@@ -25,7 +25,7 @@ public class DislikeVideoServlet extends HttpServlet {
 
         // Nếu chưa login → chuyển hướng tới trang đăng nhập
         if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/account/login");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
@@ -37,8 +37,12 @@ public class DislikeVideoServlet extends HttpServlet {
             favoriteDAO.delete(userId, videoId); // Xóa khỏi yêu thích
         }
 
-        // Quay lại trang video detail
-        resp.sendRedirect("home");
+        String section = req.getParameter("section");
+        if ("favorite".equals(section)) {
+            resp.sendRedirect("home?section=favorite");
+        } else {
+            resp.sendRedirect("home");
+        }
     }
 }
 

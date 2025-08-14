@@ -1,6 +1,8 @@
 package com.java04.dao;
 
 import com.java04.dto.VideoSearchInfo;
+import com.java04.dto.FavoriteReportDTO;
+import com.java04.dto.FavoriteUserDTO;
 import com.java04.entity.Favorite;
 
 import java.util.List;
@@ -11,4 +13,6 @@ public interface FavoriteDAO extends GenericDAO<Favorite, Long> {
     boolean isLiked(String userId, String videoId);
     void like(String userId, String videoId);
     void delete(String userId, String videoId);
+    List<FavoriteReportDTO> getFavoriteReport();
+    List<FavoriteUserDTO> getFavoriteUsersByVideoTitle(String title);
 }

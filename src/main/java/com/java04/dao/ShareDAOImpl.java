@@ -1,6 +1,7 @@
 package com.java04.dao;
 
 import com.java04.dto.ShareSummaryDTO;
+import com.java04.dto.SharedFriendDTO;
 import com.java04.entity.Share;
 
 import javax.persistence.EntityManager;
@@ -54,5 +55,15 @@ public class ShareDAOImpl implements ShareDAO {
                 "s.video.title, COUNT(s), MIN(s.shareDate), MAX(s.shareDate)) " +
                 "FROM Share s GROUP BY s.video.title";
         return em.createQuery(jpql, ShareSummaryDTO.class).getResultList();
+    }
+
+    @Override
+    public List<SharedFriendDTO> getSharedFriendsByVideoTitle(String title) {
+        String jpql = "SELECT new com.java04.dto.SharedFriendDTO(" +
+                "s.user.fullname, s.user.email, s.emails, s.shareDate) " +
+                "FROM Share s WHERE LOWER(s.video.title) LIKE :title ORDER BY s.shareDate DESC";
+        return em.createQuery(jpql, SharedFriendDTO.class)
+                .setParameter("title", "%" + title.toLowerCase() + "%")
+                .getResultList();
     }
 }

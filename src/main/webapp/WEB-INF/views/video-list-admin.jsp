@@ -20,6 +20,10 @@
         <ul class="navbar-nav me-auto">
             <li class="nav-item">
                 <!-- Link tới trang quản lý người dùng, dùng contextPath để không phụ thuộc cấu hình app -->
+                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/home">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+                <!-- Link tới trang quản lý người dùng, dùng contextPath để không phụ thuộc cấu hình app -->
                 <a class="nav-link text-dark" href="${pageContext.request.contextPath}/user-management">Quản lý người dùng</a>
             </li>
             <li class="nav-item">

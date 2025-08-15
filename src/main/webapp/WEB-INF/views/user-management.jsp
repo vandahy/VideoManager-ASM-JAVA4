@@ -26,13 +26,20 @@
         <a class="navbar-brand fw-bold text-dark" href="#">👑 Admin Dashboard</a>
         <ul class="navbar-nav me-auto">
             <li class="nav-item">
-                <a class="nav-link text-dark" href="user-management">Quản lý người dùng</a>
+                <!-- Link tới trang quản lý người dùng, dùng contextPath để không phụ thuộc cấu hình app -->
+                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/home">Trang chủ</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="admin/video">Quản lý video</a>
+                <!-- Link tới trang quản lý người dùng, dùng contextPath để không phụ thuộc cấu hình app -->
+                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/user-management">Quản lý người dùng</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" href="admin/report">Thống kê</a>
+                <!-- Link tới trang quản lý video -->
+                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/admin/video">Quản lý video</a>
+            </li>
+            <li class="nav-item">
+                <!-- Link tới trang thống kê -->
+                <a class="nav-link text-dark" href="${pageContext.request.contextPath}/admin/report">Thống kê</a>
             </li>
         </ul>
         <span class="navbar-text text-dark">

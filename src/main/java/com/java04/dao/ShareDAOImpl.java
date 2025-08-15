@@ -66,4 +66,13 @@ public class ShareDAOImpl implements ShareDAO {
                 .setParameter("title", "%" + title.toLowerCase() + "%")
                 .getResultList();
     }
+
+    @Override
+    public int countSharesByVideoId(String videoId) {
+        String jpql = "SELECT COUNT(s) FROM Share s WHERE s.video.id = :videoId";
+        Long count = em.createQuery(jpql, Long.class)
+                .setParameter("videoId", videoId)
+                .getSingleResult();
+        return count.intValue();
+    }
 }

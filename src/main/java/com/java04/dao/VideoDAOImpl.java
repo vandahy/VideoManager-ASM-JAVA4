@@ -12,7 +12,7 @@ import java.util.List;
 public class VideoDAOImpl implements VideoDAO {
     private EntityManager em;
 
-    public VideoDAOImpl(){
+    public VideoDAOImpl() {
         em = Persistence.createEntityManagerFactory("myPersistenceUnit").createEntityManager();
     }
 
@@ -57,7 +57,7 @@ public class VideoDAOImpl implements VideoDAO {
     @Override
     public List<Video> findByTitleContaining(String keyword) {
         return em.createQuery(
-                        "SELECT v FROM Video v WHERE LOWER(v.title) LIKE :keyword", Video.class)
+                "SELECT v FROM Video v WHERE LOWER(v.title) LIKE :keyword", Video.class)
                 .setParameter("keyword", "%" + keyword.toLowerCase() + "%")
                 .getResultList();
     }
@@ -65,7 +65,7 @@ public class VideoDAOImpl implements VideoDAO {
     @Override
     public List<Video> findTop10FavoriteVideos() {
         return em.createQuery(
-                        "SELECT f.video FROM Favorite f GROUP BY f.video ORDER BY COUNT(f) DESC", Video.class)
+                "SELECT f.video FROM Favorite f GROUP BY f.video ORDER BY COUNT(f) DESC", Video.class)
                 .setMaxResults(10)
                 .getResultList();
     }
@@ -73,15 +73,16 @@ public class VideoDAOImpl implements VideoDAO {
     @Override
     public List<Video> findVideosNotFavorited() {
         return em.createQuery(
-                        "SELECT v FROM Video v WHERE v.favorite IS EMPTY", Video.class)
+                "SELECT v FROM Video v WHERE v.favorite IS EMPTY", Video.class)
                 .getResultList();
     }
 
     @Override
     public List<Video> findAllByViewsDesc() {
         return em.createQuery("SELECT v FROM Video v ORDER BY v.views DESC", Video.class)
-                .getResultList();  // ❌ không có setMaxResults
+                .getResultList(); // ❌ không có setMaxResults
     }
+
     @Override
     public int count() {
         Long count = em.createQuery("SELECT COUNT(v) FROM Video v", Long.class)
@@ -96,6 +97,13 @@ public class VideoDAOImpl implements VideoDAO {
                 .setMaxResults(size)
                 .getResultList();
     }
+
+    @Override
+    public int countLikeByViews(String videoId) {
+        Long count = em.createQuery(
+                "SELECT COUNT(f) FROM Favorite f WHERE f.video.id = :videoId", Long.class)
+                .setParameter("videoId", videoId)
+                .getSingleResult();
+        return count.intValue();
+    }
 }
-
-

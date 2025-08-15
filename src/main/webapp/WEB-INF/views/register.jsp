@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập</title>
+    <title>Đăng ký</title>
     <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -23,7 +23,7 @@
 
         <div class="mb-3">
             <label for="username" class="form-label">Email:</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <input type="email" class="form-control" id="username" name="username" required>
         </div>
 
         <div class="mb-3">
@@ -41,13 +41,11 @@
     </c:if>
     <c:remove var="message" scope="session" />
 
-
     <div class="mt-3 text-center">
         <span>Bạn đã có tài khoản? <a href="login">Đăng nhập ngay</a></span>
     </div>
 </div>
 
-<!-- Bootstrap JS (tùy chọn) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

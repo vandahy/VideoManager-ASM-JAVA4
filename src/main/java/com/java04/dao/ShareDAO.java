@@ -8,5 +8,8 @@ import java.util.List;
 
 public interface ShareDAO extends GenericDAO<Share, Long> {
     List<ShareSummaryDTO> getShareSummary();
+
     List<SharedFriendDTO> getSharedFriendsByVideoTitle(String title);
+
+    int countSharesByVideoId(String videoId);
 }

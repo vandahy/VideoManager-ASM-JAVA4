@@ -7,6 +7,8 @@ import com.java04.dao.VideoDAOImpl;
 import com.java04.entity.Favorite;
 import com.java04.entity.User;
 import com.java04.entity.Video;
+import com.java04.dao.ShareDAO;
+import com.java04.dao.ShareDAOImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
@@ -47,6 +51,23 @@ public class HomeServlet extends HttpServlet {
         if (user != null) {
             List<Favorite> favorites = favoriteDAO.findByUserId(user.getId());
             request.setAttribute("favorites", favorites);
+
+            // Kiểm tra trạng thái like của từng video
+            Map<String, Boolean> videoLikeStatus = new HashMap<>();
+            for (Video video : videos) {
+                boolean isLiked = favoriteDAO.isLiked(user.getId(), video.getId());
+                videoLikeStatus.put(video.getId(), isLiked);
+            }
+            request.setAttribute("videoLikeStatus", videoLikeStatus);
+
+            // Thêm: Lấy số lượt share của từng video
+            ShareDAO shareDAO = new ShareDAOImpl();
+            Map<String, Integer> videoShareCount = new HashMap<>();
+            for (Video video : videos) {
+                int shareCount = shareDAO.countSharesByVideoId(video.getId());
+                videoShareCount.put(video.getId(), shareCount);
+            }
+            request.setAttribute("videoShareCount", videoShareCount);
         }
 
         request.setAttribute("videos", videos);
@@ -56,4 +77,3 @@ public class HomeServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(request, response);
     }
 }
-

@@ -24,6 +24,11 @@
                     <li class="nav-item">
                         <a id="btnFavorite" class="nav-link" href="like">MY FAVORITE</a>
                     </li>
+                    <c:if test="${not empty user and user.admin}">
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin/video">ADMIN PAGE</a>
+                        </li>
+                    </c:if>
                     <li class="nav-item dropdown">
                         <a id="btnAccount" class="nav-link dropdown-toggle" href="home" role="button"
                             data-bs-toggle="dropdown">

@@ -51,6 +51,20 @@
 
 <!-- 🔽 NỘI DUNG CHÍNH -->
 <div class="container mt-4">
+    <!-- Hiển thị thông báo lỗi/thành công -->
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Lỗi:</strong> ${error}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </c:if>
+    <c:if test="${not empty message}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Thành công:</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </c:if>
+    
     <h3 class="text-primary mb-4">🧑‍💼 Danh sách người dùng</h3>
 
     <table class="table table-striped table-bordered">
@@ -71,7 +85,14 @@
                 <td>${u.fullname}</td>
                 <td><c:if test="${u.admin}">✅</c:if><c:if test="${!u.admin}">❌</c:if></td>
                 <td>
-                    <a href="edit-user?id=${u.id}" class="btn btn-sm btn-warning">Sửa</a>
+                    <button type="button"
+                            class="btn btn-sm btn-warning"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editUserModal"
+                            data-id="${u.id}"
+                            data-email="${u.email}"
+                            data-fullname="${u.fullname}"
+                            data-admin="${u.admin}">Sửa</button>
                     <a href="delete-user?id=${u.id}" class="btn btn-sm btn-danger" onclick="return confirm('Xoá người dùng này?')">Xoá</a>
                 </td>
             </tr>
@@ -80,5 +101,119 @@
     </table>
 </div>
 </form>
+<!-- Modal Edit User -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Chỉnh sửa người dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="${pageContext.request.contextPath}/edit-user">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" name="id" id="edit-id" class="form-control" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="email" id="edit-email" class="form-control" required>
+                        <div class="invalid-feedback">Email không được để trống</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
+                        <input type="text" name="fullname" id="edit-fullname" class="form-control" required>
+                        <div class="invalid-feedback">Họ và tên không được để trống</div>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" name="admin" id="edit-admin">
+                        <label class="form-check-label" for="edit-admin">Admin</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+<!-- End Modal Edit User -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const editModal = document.getElementById('editUserModal');
+    if (editModal) {
+        editModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            if (!button) return;
+            const id = button.getAttribute('data-id');
+            const email = button.getAttribute('data-email');
+            const fullname = button.getAttribute('data-fullname');
+            const isAdmin = button.getAttribute('data-admin') === 'true';
+
+            document.getElementById('edit-id').value = id || '';
+            document.getElementById('edit-email').value = email || '';
+            document.getElementById('edit-fullname').value = fullname || '';
+            document.getElementById('edit-admin').checked = isAdmin;
+            
+            // Reset validation state khi mở modal
+            resetValidation();
+        });
+    }
+    
+    // Validation client-side
+    function resetValidation() {
+        const emailInput = document.getElementById('edit-email');
+        const fullnameInput = document.getElementById('edit-fullname');
+        
+        emailInput.classList.remove('is-invalid');
+        fullnameInput.classList.remove('is-invalid');
+    }
+    
+    // Xử lý form submit với validation
+    document.querySelector('#editUserModal form').addEventListener('submit', function(e) {
+        const emailInput = document.getElementById('edit-email');
+        const fullnameInput = document.getElementById('edit-fullname');
+        let hasError = false;
+        
+        // Reset validation
+        resetValidation();
+        
+        // Kiểm tra email
+        if (!emailInput.value.trim()) {
+            emailInput.classList.add('is-invalid');
+            hasError = true;
+        }
+        
+        // Kiểm tra fullname
+        if (!fullnameInput.value.trim()) {
+            fullnameInput.classList.add('is-invalid');
+            hasError = true;
+        }
+        
+        // Nếu có lỗi, ngăn form submit
+        if (hasError) {
+            e.preventDefault();
+            return false;
+        }
+    });
+    
+    // Real-time validation khi blur input
+    document.getElementById('edit-email').addEventListener('blur', function() {
+        if (!this.value.trim()) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+        }
+    });
+    
+    document.getElementById('edit-fullname').addEventListener('blur', function() {
+        if (!this.value.trim()) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+        }
+    });
+</script>
 </body>
 </html>

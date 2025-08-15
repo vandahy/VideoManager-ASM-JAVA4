@@ -127,6 +127,18 @@
                         <!-- Hiển thị thông báo lỗi/thành công nếu có -->
                         <c:if test="${not empty error}">
                             <div class="alert alert-danger">${error}</div>
+                            <script>
+                                (function(){
+                                    try {
+                                        var id = document.getElementById('id');
+                                        var title = document.getElementById('title');
+                                        var links = document.getElementById('links');
+                                        if (id && !id.value) id.classList.add('is-invalid');
+                                        if (title && !title.value) title.classList.add('is-invalid');
+                                        if (links && !links.value) links.classList.add('is-invalid');
+                                    } catch(e) {}
+                                })();
+                            </script>
                         </c:if>
                         <c:if test="${not empty message}">
                             <div class="alert alert-success">${message}</div>

@@ -66,15 +66,55 @@ public class VideoCRUDServlet extends HttpServlet {
     private void create(HttpServletRequest req) {
         try {
             Video video = extractForm(req);
+            // Basic required field validation
+            if (isNullOrEmpty(video.getId()) || isNullOrEmpty(video.getTitle()) || isNullOrEmpty(video.getLinks())) {
+                req.setAttribute("error", "Vui lòng nhập đầy đủ thông tin bắt buộc (ID, Title, Link)");
+                return;
+            }
+
+            // Normalize ID (trim and lower prefix check)
+            video.setId(video.getId().trim());
+
+            // Enforce pattern: vd + number
+            String id = video.getId();
+            int digitIdx = firstDigitIndex(id);
+            if (digitIdx <= 0 || !id.substring(0, digitIdx).equalsIgnoreCase("vid")) {
+                req.setAttribute("error", "ID video phải có dạng vd + số (ví dụ: vid01, vid11)");
+                return;
+            }
+
+            // Duplicate ID check
+            if (videoDAO.findById(video.getId()) != null) {
+                req.setAttribute("error", "Video ID này đã tồn tại");
+                return;
+            }
+
+            // Sequential ID check (e.g., last vd10 -> new must be vd11)
+            String expectedId = computeNextVideoIdForPrefix("vid");
+            if (expectedId != null && !video.getId().equalsIgnoreCase(expectedId)) {
+                req.setAttribute("error", "ID video " + video.getId() + " không hợp lệ. Phải là " + expectedId);
+                return;
+            }
+
             videoDAO.create(video);
             req.setAttribute("message", "Thêm video thành công!");
         } catch (Exception e) {
-            req.setAttribute("error", "Lỗi thêm video: " + e.getMessage());
+            String cause = rootCauseMessage(e);
+            if (cause != null && cause.toLowerCase().contains("constraint") ||
+                cause != null && cause.toLowerCase().contains("duplicate")) {
+                req.setAttribute("error", "Video ID này đã tồn tại");
+            } else {
+                req.setAttribute("error", "Lỗi thêm video: " + (cause != null ? cause : e.getMessage()));
+            }
         }
     }
 
     private void update(HttpServletRequest req, String id) {
         try {
+            if (isNullOrEmpty(id) || "null".equalsIgnoreCase(id)) {
+                req.setAttribute("error", "Vui lòng bấm Edit video muốn thao tác");
+                return;
+            }
             Video video = extractForm(req);
             video.setId(id); // cập nhật theo id trên URL
             videoDAO.update(video);
@@ -86,6 +126,10 @@ public class VideoCRUDServlet extends HttpServlet {
 
     private void delete(HttpServletRequest req, String id) {
         try {
+            if (isNullOrEmpty(id) || "null".equalsIgnoreCase(id)) {
+                req.setAttribute("error", "Vui lòng bấm Edit video muốn thao tác");
+                return;
+            }
             videoDAO.deleteById(id);
             req.setAttribute("message", "Xóa video thành công!");
         } catch (Exception e) {
@@ -113,6 +157,95 @@ public class VideoCRUDServlet extends HttpServlet {
         v.setActive(req.getParameter("active") != null);
         v.setLinks(req.getParameter("links"));
         return v;
+    }
+
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().isEmpty();
+    }
+
+    // Compute next expected video ID based on existing IDs. If not determinable, return null.
+    private String computeNextVideoId() {
+        try {
+            List<Video> all = videoDAO.findAll();
+            String lastId = null;
+            int lastNum = -1;
+            int padLength = 0;
+            String prefix = null;
+            for (Video v : all) {
+                String vid = v.getId();
+                if (vid == null) continue;
+                int idx = firstDigitIndex(vid);
+                if (idx < 0) continue;
+                String pfx = vid.substring(0, idx);
+                String numPart = vid.substring(idx);
+                try {
+                    int num = Integer.parseInt(numPart);
+                    if (num > lastNum) {
+                        lastNum = num;
+                        lastId = vid;
+                        padLength = numPart.length();
+                        prefix = pfx;
+                    }
+                } catch (NumberFormatException ignore) {}
+            }
+            if (lastId == null) return null;
+            int next = lastNum + 1;
+            String nextNum = padLength > 0 ? String.format("%0" + padLength + "d", next) : String.valueOf(next);
+            return (prefix != null ? prefix : "") + nextNum;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String computeNextVideoIdForPrefix(String requiredPrefixLower) {
+        try {
+            List<Video> all = videoDAO.findAll();
+            int lastNum = 0;
+            int padLength = 0;
+            boolean found = false;
+            for (Video v : all) {
+                String vid = v.getId();
+                if (vid == null) continue;
+                int idx = firstDigitIndex(vid);
+                if (idx <= 0) continue;
+                String pfx = vid.substring(0, idx);
+                if (!pfx.equalsIgnoreCase(requiredPrefixLower)) continue;
+                String numPart = vid.substring(idx);
+                try {
+                    int num = Integer.parseInt(numPart);
+                    if (!found || num > lastNum) {
+                        lastNum = num;
+                        padLength = numPart.length();
+                        found = true;
+                    }
+                } catch (NumberFormatException ignore) {}
+            }
+            if (!found) {
+                // If no existing IDs with this prefix, start with vd01
+                return requiredPrefixLower + "01";
+            }
+            int next = lastNum + 1;
+            String nextNum = padLength > 0 ? String.format("%0" + padLength + "d", next) : String.valueOf(next);
+            return requiredPrefixLower + nextNum;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private int firstDigitIndex(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isDigit(s.charAt(i))) return i;
+        }
+        return -1;
+    }
+
+    private String rootCauseMessage(Throwable t) {
+        if (t == null) return null;
+        Throwable cur = t;
+        while (cur.getCause() != null && cur.getCause() != cur) {
+            cur = cur.getCause();
+        }
+        return cur.getMessage();
     }
 
     // Lấy ID từ URL (VD: /admin/video/edit/VID01 => VID01)

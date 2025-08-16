@@ -8,6 +8,9 @@ import com.java04.dao.FavoriteDAOImpl;
 import com.java04.entity.User;
 import com.java04.dao.ShareDAO;
 import com.java04.dao.ShareDAOImpl;
+import com.java04.dao.CommentDAO;
+import com.java04.dao.CommentDAOImpl;
+import com.java04.entity.Comment;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,6 +40,17 @@ public class VideoChiTietServlet extends HttpServlet {
             ShareDAO shareDAO = new ShareDAOImpl();
             int shareCount = shareDAO.countSharesByVideoId(videoId);
             request.setAttribute("shareCount", shareCount);
+
+            // Thêm: Load comments cho video này
+            try {
+                CommentDAO commentDAO = new CommentDAOImpl(getServletContext());
+                List<Comment> comments = commentDAO.findByVideoId(videoId);
+                request.setAttribute("comments", comments);
+            } catch (Exception e) {
+                // Log error but don't break the page
+                System.err.println("Error loading comments: " + e.getMessage());
+                request.setAttribute("comments", null);
+            }
 
             HttpSession session = request.getSession(false);
             User user = (session != null) ? (User) session.getAttribute("user") : null;

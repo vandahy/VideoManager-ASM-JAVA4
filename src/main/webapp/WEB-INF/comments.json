@@ -1,0 +1,36 @@
+{
+  "comments": [
+    {
+      "commentId": 1,
+      "videoId": "vid010",
+      "userId": "user01",
+      "fullName": "Nguyễn Văn A",
+      "commentTime": "2025-08-16 20:32:02",
+      "content": "dahy"
+    },
+    {
+      "commentId": 2,
+      "videoId": "vid009",
+      "userId": "user01",
+      "fullName": "Nguyễn Văn A",
+      "commentTime": "2025-08-16 20:34:57",
+      "content": "sao vậy"
+    },
+    {
+      "commentId": 3,
+      "videoId": "vid010",
+      "userId": "admin01",
+      "fullName": "Trần Văn C",
+      "commentTime": "2025-08-16 20:35:40",
+      "content": "video hay quá"
+    },
+    {
+      "commentId": 4,
+      "videoId": "vid010",
+      "userId": "admin01",
+      "fullName": "Trần Văn C",
+      "commentTime": "2025-08-16 21:03:38",
+      "content": "gì"
+    }
+  ]
+}
